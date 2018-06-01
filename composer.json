@@ -19,7 +19,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "MyComponent\\Tests\\": "tests/phpunit/"
+            "Keboola\\S3Writer\\": "src/",
+            "Keboola\\S3Writer\\Tests\\": "tests/phpunit/"
         }
     },
     "scripts": {
