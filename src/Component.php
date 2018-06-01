@@ -11,10 +11,9 @@ class Component extends BaseComponent
 {
     public function run(): void
     {
-        $streamHandler = new \Monolog\Handler\StreamHandler('php://stdout');
-        $streamHandler->setFormatter(new \Monolog\Formatter\LineFormatter("%message%\n"));
-        $logger = new Logger([$streamHandler]);
-        $writer = new S3Writer($this->getConfig(), $logger);
+        /** @var Config $config */
+        $config = $this->getConfig();
+        $writer = new S3Writer($config, $this->getLogger());
         $writer->execute(getenv('KBC_DATADIR') . '/out/files');
     }
 
