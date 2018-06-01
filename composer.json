@@ -15,12 +15,11 @@
     },
     "autoload": {
         "psr-4": {
-            "MyComponent\\": "src/"
+            "Keboola\\S3Writer\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Keboola\\S3Writer\\": "src/",
             "Keboola\\S3Writer\\Tests\\": "tests/phpunit/"
         }
     },
@@ -50,5 +49,7 @@
     "config": {
         "sort-packages": true,
         "optimize-autoloader": true
-    }
+    },
+    "name": "keboola/aws-s3-writer",
+    "description": "S3 Writer"
 }
