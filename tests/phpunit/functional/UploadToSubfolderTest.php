@@ -38,7 +38,7 @@ class UploadToSubfolderTest extends FunctionalTestCase
         self::assertTrue($testHandler->hasInfoThatContains(
             "Uploading file folder/file1.csv to subfolder/folder/file1.csv"
         ));
-        $client = $this->getClient();
+        $client = $this->getFixturesClient();
         self::assertTrue($client->doesObjectExist(getenv(self::AWS_S3_BUCKET_ENV), 'subfolder/file1.csv'));
         self::assertTrue($client->doesObjectExist(getenv(self::AWS_S3_BUCKET_ENV), 'subfolder/folder/file1.csv'));
 

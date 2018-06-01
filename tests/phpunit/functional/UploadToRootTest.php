@@ -36,9 +36,8 @@ class UploadToRootTest extends FunctionalTestCase
         self::assertCount(2, $testHandler->getRecords());
         self::assertTrue($testHandler->hasInfoThatContains("Uploading file file1.csv to file1.csv"));
         self::assertTrue($testHandler->hasInfoThatContains("Uploading file folder/file1.csv to folder/file1.csv"));
-        $client = $this->getClient();
+        $client = $this->getFixturesClient();
         self::assertTrue($client->doesObjectExist(getenv(self::AWS_S3_BUCKET_ENV), 'file1.csv'));
-        self::assertTrue($client->doesObjectExist(getenv(self::AWS_S3_BUCKET_ENV), 'folder/file1.csv'));
         self::assertTrue($client->doesObjectExist(getenv(self::AWS_S3_BUCKET_ENV), 'folder/file1.csv'));
     }
 
