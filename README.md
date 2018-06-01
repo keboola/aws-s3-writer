@@ -47,13 +47,15 @@ Upload all files in `/data/in/files` to the specified bucket and prefix.
 ### Preparation
 
 - Create AWS S3 bucket and IAM user using [`aws-services.json`](./aws-services.json) CloudFormation template.
-- Create `.env` file. Use output of `aws-services` CloudFront stack to fill the variables and your Redshift credentials.
+- Create `.env` file. Use output of `aws-services` CloudFront stack to fill the variables and your S3 credentials.
 
 ```
 AWS_S3_BUCKET=
 AWS_REGION=
-AWS_ACCESS_KEY_ID=
-AWS_SECRET_ACCESS_KEY=
+WRITER_AWS_ACCESS_KEY_ID=
+WRITER_AWS_SECRET_ACCESS_KEY=
+FIXTURES_AWS_ACCESS_KEY_ID=
+FIXTURES_AWS_SECRET_ACCESS_KEY=
 ```
 
 Clone this repository and init the workspace with following command:
