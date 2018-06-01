@@ -2,11 +2,45 @@
 
 [![Build Status](https://travis-ci.org/keboola/aws-s3-writer.svg?branch=master)](https://travis-ci.org/keboola/aws-s3-writer)
 
-> Fill in description
+Upload all files in `/data/in/files` to the specified bucket and prefix.
 
 # Usage
 
 > fill in usage instructions
+
+## Configuration options
+
+- `accessKeyId` (required) -- AWS Access Key ID
+- `#secretAccessKey` (required) -- AWS Secret Access Key
+- `bucket` (required) -- AWS S3 bucket name, it's region will be autodetected
+- `prefix` (optional) -- Path prefix
+
+### Sample configurations
+
+#### Upload to bucket root
+
+```json
+{
+    "parameters": {
+        "accessKeyId": "AKIA****",
+        "#secretAccessKey": "****",
+        "bucket": "myBucket"
+    }
+}
+```
+
+#### Upload with prefix bucket root
+
+```json
+{
+    "parameters": {
+        "accessKeyId": "AKIA****",
+        "#secretAccessKey": "****",
+        "bucket": "myBucket",
+        "prefix": "myPath/"
+    }
+}
+```
 
 ## Development
 
