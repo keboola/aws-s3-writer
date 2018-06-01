@@ -15,7 +15,7 @@ class FunctionalTestCase extends \PHPUnit\Framework\TestCase
 
     public function tearDown(): void
     {
-        $this->tearDown();
+        parent::tearDown();
         (new Process('php ' . __DIR__ . '/../purgeS3.php'))->mustRun();
     }
 }
