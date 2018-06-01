@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-/**
- * Purges S3
+/*
+ * Purges S3 bucket
  */
 
 date_default_timezone_set('Europe/Prague');
-ini_set('display_errors', true);
+ini_set('display_errors', 'true');
 error_reporting(E_ALL);
 
 $basedir = dirname(__DIR__);
