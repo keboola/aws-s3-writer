@@ -13,7 +13,9 @@ class Component extends BaseComponent
     {
         /** @var Config $config */
         $config = $this->getConfig();
-        $writer = new S3Writer($config, $this->getLogger());
+        /** @var Logger $logger */
+        $logger = $this->getLogger();
+        $writer = new S3Writer($config, $logger);
         $writer->execute(getenv('KBC_DATADIR') . '/out/files');
     }
 
