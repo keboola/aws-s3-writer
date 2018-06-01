@@ -6,7 +6,7 @@ namespace Keboola\S3Writer\Tests\Functional;
 
 use Symfony\Component\Process\Process;
 
-class FunctionalTestCase extends \PHPUnit\Framework\TestCase
+abstract class FunctionalTestCase extends \PHPUnit\Framework\TestCase
 {
     protected const AWS_S3_BUCKET_ENV = 'AWS_S3_BUCKET';
     protected const AWS_S3_ACCESS_KEY_ID_ENV = 'WRITER_AWS_ACCESS_KEY_ID';
