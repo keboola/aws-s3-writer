@@ -33,11 +33,15 @@ class UploadToSubfolderTest extends FunctionalTestCase
         $writer = new S3Writer($config, (new Logger('test'))->pushHandler($testHandler));
         $writer->execute(__DIR__ . "/_data/out/files");
 
-        $this->assertCount(2, $testHandler->getRecords());
-        $this->assertTrue($testHandler->hasInfoThatContains("Uploading file file1.csv to subfolder/file1.csv"));
-        $this->assertTrue($testHandler->hasInfoThatContains(
+        self::assertCount(2, $testHandler->getRecords());
+        self::assertTrue($testHandler->hasInfoThatContains("Uploading file file1.csv to subfolder/file1.csv"));
+        self::assertTrue($testHandler->hasInfoThatContains(
             "Uploading file folder/file1.csv to subfolder/folder/file1.csv"
         ));
+        $client = $this->getClient();
+        self::assertTrue($client->doesObjectExist(getenv(self::AWS_S3_BUCKET_ENV), 'subfolder/file1.csv'));
+        self::assertTrue($client->doesObjectExist(getenv(self::AWS_S3_BUCKET_ENV), 'subfolder/folder/file1.csv'));
+
     }
 
     public function initialForwardSlashProvider(): array
