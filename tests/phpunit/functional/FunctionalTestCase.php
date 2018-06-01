@@ -13,7 +13,7 @@ class FunctionalTestCase extends \PHPUnit\Framework\TestCase
     protected const AWS_S3_SECRET_ACCESS_KEY_ENV = 'WRITER_AWS_SECRET_ACCESS_KEY';
     protected const AWS_REGION = 'AWS_REGION';
 
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
         (new Process('php ' . __DIR__ . '/../purgeS3.php'))->mustRun();
