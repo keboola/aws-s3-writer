@@ -1,6 +1,7 @@
 {
     "require": {
         "PHP": "^7.1",
+        "aws/aws-sdk-php": "^3.59",
         "keboola/php-component": "^4.1"
     },
     "require-dev": {
