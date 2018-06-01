@@ -17,7 +17,7 @@ class UploadToSubfolderTest extends FunctionalTestCase
      */
     public function testUploadToSubfolder(bool $initialForwardSlash): void
     {
-        $prefix = "subfolder";
+        $prefix = "subfolder/";
         if ($initialForwardSlash) {
             $prefix = "/" . $prefix;
         }
