@@ -81,7 +81,7 @@ class S3Writer
                 throw new UserException("Invalid credentials or permissions.", $e->getCode(), $e);
             }
             if ($e->getStatusCode() === 400 || $e->getStatusCode() === 401 || $e->getStatusCode() === 404) {
-                if (get_class($e->getPrevious()) === ClientException::class) {
+                if ($e->getPrevious() instanceof ClientException) {
                     /** @var ClientException $previous */
                     $previous = $e->getPrevious();
                     if ($previous->getResponse()) {
