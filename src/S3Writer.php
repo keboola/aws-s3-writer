@@ -94,6 +94,7 @@ class S3Writer
                             . ")\n"
                             . $previous->getResponse()->getBody()->__toString()
                         );
+                    }
                     throw new UserException($previous->getMessage());
                 }
                 throw new UserException($e->getMessage());
