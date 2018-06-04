@@ -85,15 +85,7 @@ class S3Writer
                     /** @var ClientException $previous */
                     $previous = $e->getPrevious();
                     if ($previous->getResponse()) {
-                        throw new UserException(
-                            $previous->getResponse()->getStatusCode()
-                            . " "
-                            . $previous->getResponse()->getReasonPhrase()
-                            . " ("
-                            . $e->getAwsErrorCode()
-                            . ")\n"
-                            . $previous->getResponse()->getBody()->__toString()
-                        );
+                        throw S3WriterException::factory($e);
                     }
                     throw new UserException($previous->getMessage());
                 }
