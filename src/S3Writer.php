@@ -9,7 +9,6 @@ use Aws\S3\S3Client;
 use Aws\S3\S3MultiRegionClient;
 use GuzzleHttp\Exception\ClientException;
 use Keboola\Component\UserException;
-use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
@@ -22,7 +21,6 @@ class S3Writer
     private $config;
 
     /**
-     * @var Logger
      * @var LoggerInterface
      */
     private $logger;
