@@ -6,7 +6,7 @@ services:
   - docker
 
 before_script:
-  - export APP_IMAGE=keboola-component
+  - export APP_IMAGE=keboola/s3-writer
   - docker -v
   - docker build -t $APP_IMAGE .
   - docker run -e AWS_S3_BUCKET -e AWS_REGION -e WRITER_AWS_ACCESS_KEY_ID -e WRITER_AWS_SECRET_ACCESS_KEY -e FIXTURES_AWS_ACCESS_KEY_ID -e FIXTURES_AWS_SECRET_ACCESS_KEY $APP_IMAGE composer ci
