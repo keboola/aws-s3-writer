@@ -6,8 +6,6 @@ Upload all files in `/data/in/files` to the specified bucket and prefix. Existin
 
 # Usage
 
-> fill in usage instructions
-
 ## Configuration options
 
 - `accessKeyId` (required) -- AWS Access Key ID
