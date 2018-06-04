@@ -14,7 +14,7 @@ class Component extends BaseComponent
         $config = $this->getConfig();
         $logger = $this->getLogger();
         $writer = new S3Writer($config, $logger);
-        $writer->execute(getenv('KBC_DATADIR') . '/out/files');
+        $writer->execute(getenv('KBC_DATADIR') . '/in/files');
     }
 
     protected function getConfigClass(): string
