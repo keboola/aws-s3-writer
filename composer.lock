@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "10b1a9479062f4d66053552636cae999",
+    "content-hash": "6d06fa23ddf41f988c21328b7a055b11",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.59.0",
+            "version": "3.60.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "91149ea885f951eac91563a56263cfa4a8f48f6c"
+                "reference": "172ed6346ab4d1df075f5106098ed5b6e653c934"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/91149ea885f951eac91563a56263cfa4a8f48f6c",
-                "reference": "91149ea885f951eac91563a56263cfa4a8f48f6c",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/172ed6346ab4d1df075f5106098ed5b6e653c934",
+                "reference": "172ed6346ab4d1df075f5106098ed5b6e653c934",
                 "shasum": ""
             },
             "require": {
@@ -84,7 +84,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2018-05-31T01:08:17+00:00"
+            "time": "2018-06-01T20:17:58+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -979,43 +979,6 @@
             "time": "2018-05-15T15:09:36+00:00"
         },
         {
-            "name": "keboola/datadir-tests",
-            "version": "1.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/keboola/datadir-tests.git",
-                "reference": "cc688ba414b6f0fdbe614b454637c06d24eba279"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/keboola/datadir-tests/zipball/cc688ba414b6f0fdbe614b454637c06d24eba279",
-                "reference": "cc688ba414b6f0fdbe614b454637c06d24eba279",
-                "shasum": ""
-            },
-            "require": {
-                "keboola/php-temp": "^1.0",
-                "php": "^7.1",
-                "symfony/filesystem": "^4.0",
-                "symfony/finder": "^4.0",
-                "symfony/process": "^4.0"
-            },
-            "require-dev": {
-                "jakub-onderka/php-parallel-lint": "^1.0",
-                "keboola/coding-standard": "^2.0",
-                "phpstan/phpstan-shim": "^0.9.2"
-            },
-            "bin": [
-                "src/datadir-tests"
-            ],
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Tool for functional testing of Keboola Connection components",
-            "time": "2018-05-03T16:21:10+00:00"
-        },
-        {
             "name": "keboola/php-temp",
             "version": "1.0.0",
             "source": {
@@ -1717,16 +1680,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "7.2.2",
+            "version": "7.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "3cf0836680bf5c365c627e8566d46c9e1f544db9"
+                "reference": "42bb8f5b2cb36483907a20f45e4cd1665c24d8a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3cf0836680bf5c365c627e8566d46c9e1f544db9",
-                "reference": "3cf0836680bf5c365c627e8566d46c9e1f544db9",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/42bb8f5b2cb36483907a20f45e4cd1665c24d8a7",
+                "reference": "42bb8f5b2cb36483907a20f45e4cd1665c24d8a7",
                 "shasum": ""
             },
             "require": {
@@ -1797,7 +1760,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2018-06-01T07:54:27+00:00"
+            "time": "2018-06-03T06:05:05+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
