@@ -10,6 +10,7 @@ use Aws\S3\S3MultiRegionClient;
 use GuzzleHttp\Exception\ClientException;
 use Keboola\Component\UserException;
 use Monolog\Logger;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -22,13 +23,14 @@ class S3Writer
 
     /**
      * @var Logger
+     * @var LoggerInterface
      */
     private $logger;
 
     /**
      * Application constructor.
      */
-    public function __construct(Config $config, Logger $logger)
+    public function __construct(Config $config, LoggerInterface $logger)
     {
         $this->config = $config;
         $this->logger = $logger;
