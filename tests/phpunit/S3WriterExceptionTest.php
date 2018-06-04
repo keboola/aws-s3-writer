@@ -7,6 +7,7 @@ namespace Keboola\S3Writer\Tests;
 use Aws\Command;
 use Aws\S3\Exception\S3Exception;
 use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Stream;
 use Keboola\Component\UserException;
@@ -16,7 +17,70 @@ use PHPUnit\Framework\TestCase;
 
 class S3WriterExceptionTest extends TestCase
 {
-    public function testException(): void
+    public function test403Exception(): void
+    {
+        /**
+         * @var MockObject&S3Exception $stub
+         */
+        $stub = self::createMock(S3Exception::class);
+        $stub
+            ->method('getCode')
+            ->will(self::returnValue('code'));
+        $stub
+            ->method('getStatusCode')
+            ->will(self::returnValue(403));
+
+        $exception = S3WriterException::fromS3Exception($stub);
+        self::assertEquals(UserException::class, get_class($exception));
+        self::assertEquals("Invalid credentials or permissions.", $exception->getMessage());
+    }
+
+    public function test40XPreviousUnknownException(): void
+    {
+        $previousStub = self::getMockBuilder(\Throwable::class)
+            ->setConstructorArgs(['myPreviousException'])
+            ->getMock();
+
+        /**
+         * @var MockObject&S3Exception $stub
+         */
+        $stub = self::getMockBuilder(S3Exception::class)
+            ->setConstructorArgs(['myException', new Command('test'), [], $previousStub])
+            ->getMock();
+        $stub
+            ->method('getStatusCode')
+            ->will(self::returnValue(400));
+
+        $exception = S3WriterException::fromS3Exception($stub);
+        self::assertEquals(UserException::class, get_class($exception));
+        self::assertEquals("myException", $exception->getMessage());
+    }
+
+    public function test40XPreviousClientExceptionException(): void
+    {
+        $previousStub = self::getMockBuilder(ClientException::class)
+            ->setConstructorArgs(['myException', new Request('get', 'test')])
+            ->getMock();
+        $previousStub
+            ->method('getResponse')
+            ->will(self::returnValue(null));
+
+        /**
+         * @var MockObject&S3Exception $stub
+         */
+        $stub = self::getMockBuilder(S3Exception::class)
+            ->setConstructorArgs([null, new Command('test'), [], $previousStub])
+            ->getMock();
+        $stub
+            ->method('getStatusCode')
+            ->will(self::returnValue(400));
+
+        $exception = S3WriterException::fromS3Exception($stub);
+        self::assertEquals(UserException::class, get_class($exception));
+        self::assertEquals("myException", $exception->getMessage());
+    }
+
+    public function test40XPreviousClientExceptionWithResponseException(): void
     {
         $bodyStub = self::createMock(Stream::class);
         $bodyStub
@@ -24,9 +88,6 @@ class S3WriterExceptionTest extends TestCase
             ->will(self::returnValue('Test Error'));
 
         $responseStub = self::createMock(Response::class);
-        $responseStub
-            ->method('getStatusCode')
-            ->will(self::returnValue('400'));
         $responseStub
             ->method('getReasonPhrase')
             ->will(self::returnValue('Error'));
@@ -48,9 +109,29 @@ class S3WriterExceptionTest extends TestCase
         $stub
             ->method('getAwsErrorCode')
             ->will(self::returnValue('awsErrorCode'));
+        $stub
+            ->method('getStatusCode')
+            ->will(self::returnValue(400));
 
-        $exception = S3WriterException::factory($stub);
+        $exception = S3WriterException::fromS3Exception($stub);
         self::assertEquals(UserException::class, get_class($exception));
         self::assertEquals("400 Error (awsErrorCode)\nTest Error", $exception->getMessage());
+    }
+
+    public function test500Exception(): void
+    {
+        /**
+         * @var MockObject&S3Exception $stub
+         */
+        $stub = self::createMock(S3Exception::class);
+        $stub
+            ->method('getCode')
+            ->will(self::returnValue('code'));
+        $stub
+            ->method('getStatusCode')
+            ->will(self::returnValue(500));
+
+        $exception = S3WriterException::fromS3Exception($stub);
+        self::assertEquals($stub, $exception);
     }
 }

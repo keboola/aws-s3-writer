@@ -77,21 +77,7 @@ class S3Writer
                 );
             }
         } catch (S3Exception $e) {
-            if ($e->getStatusCode() === 403) {
-                throw new UserException("Invalid credentials or permissions.", $e->getCode(), $e);
-            }
-            if ($e->getStatusCode() === 400 || $e->getStatusCode() === 401 || $e->getStatusCode() === 404) {
-                if ($e->getPrevious() instanceof ClientException) {
-                    /** @var ClientException $previous */
-                    $previous = $e->getPrevious();
-                    if ($previous->getResponse()) {
-                        throw S3WriterException::factory($e);
-                    }
-                    throw new UserException($previous->getMessage());
-                }
-                throw new UserException($e->getMessage());
-            }
-            throw $e;
+            throw S3WriterException::fromS3Exception($e);
         }
     }
 }

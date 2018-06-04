@@ -10,18 +10,34 @@ use Keboola\Component\UserException;
 
 class S3WriterException
 {
-    public static function factory(S3Exception $e): UserException
+    /**
+     * @return UserException|S3Exception
+     */
+    public static function fromS3Exception(S3Exception $e)
     {
-        /** @var ClientException $previous */
-        $previous = $e->getPrevious();
-        return new UserException(
-            $previous->getResponse()->getStatusCode()
-            . " "
-            . $previous->getResponse()->getReasonPhrase()
-            . " ("
-            . $e->getAwsErrorCode()
-            . ")\n"
-            . $previous->getResponse()->getBody()->__toString()
-        );
+        if ($e->getStatusCode() === 403) {
+            return new UserException("Invalid credentials or permissions.", $e->getCode(), $e);
+        }
+        if ($e->getStatusCode() === 400 || $e->getStatusCode() === 401 || $e->getStatusCode() === 404) {
+            if ($e->getPrevious() instanceof ClientException) {
+                /** @var ClientException $previous */
+                $previous = $e->getPrevious();
+                if ($previous->getResponse()) {
+                    $previous = $e->getPrevious();
+                    return new UserException(
+                        $e->getStatusCode()
+                        . " "
+                        . $previous->getResponse()->getReasonPhrase()
+                        . " ("
+                        . $e->getAwsErrorCode()
+                        . ")\n"
+                        . $previous->getResponse()->getBody()->__toString()
+                    );
+                }
+                return new UserException($previous->getMessage());
+            }
+            return new UserException($e->getMessage());
+        }
+        return $e;
     }
 }
