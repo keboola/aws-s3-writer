@@ -77,7 +77,7 @@ class S3Writer
                 );
             }
         } catch (S3Exception $e) {
-            throw S3WriterException::fromS3Exception($e);
+            throw ExceptionFactory::fromS3Exception($e);
         }
     }
 }

@@ -8,7 +8,7 @@ use Aws\S3\Exception\S3Exception;
 use GuzzleHttp\Exception\ClientException;
 use Keboola\Component\UserException;
 
-class S3WriterException
+class ExceptionFactory
 {
     /**
      * @return UserException|S3Exception

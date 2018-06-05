@@ -11,11 +11,11 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\Psr7\Stream;
 use Keboola\Component\UserException;
-use Keboola\S3Writer\S3WriterException;
+use Keboola\S3Writer\ExceptionFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class S3WriterExceptionTest extends TestCase
+class ExceptionFactoryTest extends TestCase
 {
     public function test403Exception(): void
     {
@@ -30,7 +30,7 @@ class S3WriterExceptionTest extends TestCase
             ->method('getStatusCode')
             ->will(self::returnValue(403));
 
-        $exception = S3WriterException::fromS3Exception($stub);
+        $exception = ExceptionFactory::fromS3Exception($stub);
         self::assertEquals(UserException::class, get_class($exception));
         self::assertEquals("Invalid credentials or permissions.", $exception->getMessage());
     }
@@ -51,7 +51,7 @@ class S3WriterExceptionTest extends TestCase
             ->method('getStatusCode')
             ->will(self::returnValue(400));
 
-        $exception = S3WriterException::fromS3Exception($stub);
+        $exception = ExceptionFactory::fromS3Exception($stub);
         self::assertEquals(UserException::class, get_class($exception));
         self::assertEquals("myException", $exception->getMessage());
     }
@@ -75,7 +75,7 @@ class S3WriterExceptionTest extends TestCase
             ->method('getStatusCode')
             ->will(self::returnValue(400));
 
-        $exception = S3WriterException::fromS3Exception($stub);
+        $exception = ExceptionFactory::fromS3Exception($stub);
         self::assertEquals(UserException::class, get_class($exception));
         self::assertEquals("myException", $exception->getMessage());
     }
@@ -113,7 +113,7 @@ class S3WriterExceptionTest extends TestCase
             ->method('getStatusCode')
             ->will(self::returnValue(400));
 
-        $exception = S3WriterException::fromS3Exception($stub);
+        $exception = ExceptionFactory::fromS3Exception($stub);
         self::assertEquals(UserException::class, get_class($exception));
         self::assertEquals("400 Error (awsErrorCode)\nTest Error", $exception->getMessage());
     }
@@ -131,7 +131,7 @@ class S3WriterExceptionTest extends TestCase
             ->method('getStatusCode')
             ->will(self::returnValue(500));
 
-        $exception = S3WriterException::fromS3Exception($stub);
+        $exception = ExceptionFactory::fromS3Exception($stub);
         self::assertEquals($stub, $exception);
     }
 }
