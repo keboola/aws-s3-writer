@@ -1,0 +1,14 @@
+version: '2'
+services:
+  dev:
+    build: .
+    volumes:
+      - ./:/code
+      - ./data:/data
+    environment:
+      - AWS_S3_BUCKET
+      - AWS_REGION
+      - WRITER_AWS_ACCESS_KEY_ID
+      - WRITER_AWS_SECRET_ACCESS_KEY
+      - FIXTURES_AWS_ACCESS_KEY_ID
+      - FIXTURES_AWS_SECRET_ACCESS_KEY
