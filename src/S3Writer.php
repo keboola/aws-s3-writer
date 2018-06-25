@@ -180,13 +180,12 @@ class S3Writer
         return new MultipartUploader($s3Client, $filePath, $uploaderOptions);
     }
 
+    /**
+     *
+     * Concats prefix (without initial forwardslash) and relative path name to the file
+     */
     private function getS3Key(string $relativePathname) : string
     {
-        // Remove initial forwardslash
-        $prefix = $this->config->getPrefix();
-        if (substr($prefix, 0, 1) == '/') {
-            $prefix = substr($prefix, 1);
-        }
-        return $prefix . $relativePathname;
+        return ltrim($this->config->getPrefix(), '/') . $relativePathname;
     }
 }
