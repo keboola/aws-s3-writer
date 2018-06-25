@@ -72,30 +72,8 @@ class S3Writer
 
             $client = new S3Client($options);
 
-            $finder = (new Finder())->in($sourcePath)->files();
-
-
-            /** @var SplFileInfo $file */
-            /*
-            foreach ($finder as $file) {
-                // Remove initial forwardslash
-                $prefix = $this->config->getPrefix();
-                if (substr($prefix, 0, 1) == '/') {
-                    $prefix = substr($prefix, 1);
-                }
-                $key = $prefix . $file->getRelativePathname();
-                $this->logger->info("Uploading file {$file->getRelativePathname()} to {$key}");
-                $client->putObject(
-                    [
-                        'Bucket' => $this->config->getBucket(),
-                        'Key' => $key,
-                        'Body' => fopen($file->getPathname(), 'r'),
-                    ]
-                );
-            }
-            */
-
             $relativePathnames = [];
+            $finder = (new Finder())->in($sourcePath)->files();
             /** @var SplFileInfo $file */
             foreach ($finder as $file) {
                 $relativePathnames[] = $file->getRelativePathname();
