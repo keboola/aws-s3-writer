@@ -12,10 +12,6 @@ use Monolog\Logger;
 
 class UploadChunksTest extends FunctionalTestCase
 {
-
-    /**
-     * @dataProvider uploadArgumentsProvider
-     */
     public function testUploadFilesToRoot(): void
     {
         $testHandler = new TestHandler();
