@@ -13,9 +13,9 @@ use Monolog\Logger;
 class UploadToSubfolderTest extends FunctionalTestCase
 {
     /**
-     * @dataProvider initialForwardSlashProvider
+     * @dataProvider uploadArgumentsProvider
      */
-    public function testUploadToSubfolder(bool $initialForwardSlash): void
+    public function testUploadFilesToRoot(bool $initialForwardSlash, string $dataFilesPath): void
     {
         $prefix = "subfolder/";
         if ($initialForwardSlash) {
@@ -31,20 +31,25 @@ class UploadToSubfolderTest extends FunctionalTestCase
             ],
         ], new ConfigDefinition());
         $writer = new S3Writer($config, (new Logger('test'))->pushHandler($testHandler));
-        $writer->execute(__DIR__ . "/_data/out/files");
+        $writer->execute($dataFilesPath);
 
         self::assertCount(2, $testHandler->getRecords());
-        self::assertTrue($testHandler->hasInfoThatContains("Uploading file file1.csv to subfolder/file1.csv"));
+        self::assertTrue($testHandler->hasInfoThatContains("Starting upload of file file1.csv to subfolder/file1.csv"));
         self::assertTrue($testHandler->hasInfoThatContains(
-            "Uploading file folder/file1.csv to subfolder/folder/file1.csv"
+            "Starting upload of file folder/file1.csv to subfolder/folder/file1.csv"
         ));
         $client = $this->getFixturesClient();
         self::assertTrue($client->doesObjectExist(getenv(self::AWS_S3_BUCKET_ENV), 'subfolder/file1.csv'));
         self::assertTrue($client->doesObjectExist(getenv(self::AWS_S3_BUCKET_ENV), 'subfolder/folder/file1.csv'));
     }
 
-    public function initialForwardSlashProvider(): array
+    public function uploadArgumentsProvider(): array
     {
-        return [[true], [false]];
+        return [
+            [true, __DIR__ . "/data/files"],
+            [true, __DIR__ . "/data/files-empty"],
+            [false, __DIR__ . "/data/files"],
+            [false, __DIR__ . "/data/files-empty"],
+        ];
     }
 }
