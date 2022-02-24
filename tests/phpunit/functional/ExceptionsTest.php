@@ -11,7 +11,7 @@ use Keboola\S3Writer\S3Writer;
 use Monolog\Handler\TestHandler;
 use Monolog\Logger;
 
-class ExceptionsFunctionalTest extends FunctionalTestCase
+class ExceptionsTest extends FunctionalTestCase
 {
     public function testInvalidBucket(): void
     {

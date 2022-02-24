@@ -20,7 +20,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Keboola\\S3Writer\\Tests\\": "tests/phpunit/"
+            "Keboola\\S3Writer\\Tests\\": "tests/phpunit/",
+            "Keboola\\S3Writer\\Tests\\Functional\\": "tests/phpunit/functional/"
         }
     },
     "scripts": {
