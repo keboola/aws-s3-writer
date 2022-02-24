@@ -71,9 +71,6 @@ jobs:
   tests:
     needs: build
     runs-on: ubuntu-latest
-    # strategy:
-    #   fail-fast: false
-    #   matrix: ...
     steps:
       -
         name: Check out the repo
@@ -99,7 +96,8 @@ jobs:
           -e WRITER_AWS_SECRET_ACCESS_KEY \
           -e FIXTURES_AWS_ACCESS_KEY_ID \
           -e FIXTURES_AWS_SECRET_ACCESS_KEY \
-          $APP_IMAGE composer ci
+          ${{ env.APP_IMAGE}} \
+          composer ci
 
   tests-in-kbc:
     needs: build
