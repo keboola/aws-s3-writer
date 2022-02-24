@@ -23,6 +23,9 @@ class S3Writer
      *
      */
     private const MAX_RETRIES_PER_CHUNK = 50;
+
+    private const MAX_LOG_EVENTS = 100;
+
     /**
      * @var Config
      */
@@ -81,14 +84,21 @@ class S3Writer
 
             // split all slices into batch chunks and upload them separately
             $chunks = ceil(count($relativePathnames) / self::CHUNK_SIZE);
+            $counterUploadedFiles = 0;
+            $onePercentOfFiles = (int) floor(count($relativePathnames)/100);
             for ($i = 0; $i < $chunks; $i++) {
                 $chunk = array_slice($relativePathnames, $i * self::CHUNK_SIZE, self::CHUNK_SIZE);
                 // Initialize promises
                 $promises = [];
                 /** @var SplFileInfo $file */
                 foreach ($chunk as $fileRelativePathname) {
+                    $counterUploadedFiles++;
                     $s3Key = $this->getS3Key($fileRelativePathname);
-                    $this->logger->info("Starting upload of file {$fileRelativePathname} to {$s3Key}");
+                    if (count($relativePathnames) < self::MAX_LOG_EVENTS) {
+                        $this->logger->info("Starting upload of file {$fileRelativePathname} to {$s3Key}");
+                    } elseif (is_int($counterUploadedFiles/$onePercentOfFiles)) {
+                        $this->logger->info(sprintf("Uploaded %d%% files.", $counterUploadedFiles/$onePercentOfFiles));
+                    }
                     /*
                      * Cannot upload empty files using multipart: https://github.com/aws/aws-sdk-php/issues/1429
                      * Upload them directly immediately and continue to next part in the chunk.
