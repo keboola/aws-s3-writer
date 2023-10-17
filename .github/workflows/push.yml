@@ -12,11 +12,11 @@ env:
   KBC_DEVELOPERPORTAL_PASSWORD: ${{ secrets.KBC_DEVELOPERPORTAL_PASSWORD }}
 
   # AWS S3 login
-  AWS_S3_BUCKET: "ci-aws-s3-writer-gh-actions-s3filesbucket-i3gkv682avwk"
+  AWS_S3_BUCKET: "ci-s3-writer-s3filesbucket-1baj5mohmtg3v"
   AWS_REGION: "us-east-1"
-  WRITER_AWS_ACCESS_KEY_ID: "AKIAQ4QRYXTAFXMAU4CT"
+  WRITER_AWS_ACCESS_KEY_ID: "AKIATDSWT524TNGEMK4W"
   WRITER_AWS_SECRET_ACCESS_KEY: ${{ secrets.WRITER_AWS_SECRET_ACCESS_KEY }}
-  FIXTURES_AWS_ACCESS_KEY_ID: "AKIAQ4QRYXTAMQEUJ37T"
+  FIXTURES_AWS_ACCESS_KEY_ID: "AKIATDSWT524ZBKWZJJT"
   FIXTURES_AWS_SECRET_ACCESS_KEY: ${{ secrets.FIXTURES_AWS_SECRET_ACCESS_KEY }}
 
   # DockerHub login
@@ -36,7 +36,7 @@ jobs:
     steps:
       -
         name: Check out the repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       -
         name: Print Docker version
         run: docker -v
@@ -54,8 +54,8 @@ jobs:
           TAG="${GITHUB_REF##*/}"
           IS_SEMANTIC_TAG=$(echo "$TAG" | grep -q '^v\?[0-9]\+\.[0-9]\+\.[0-9]\+$' && echo true || echo false)
           echo "Tag = '$TAG', is semantic tag = '$IS_SEMANTIC_TAG'"
-          echo "::set-output name=app_image_tag::$TAG"
-          echo "::set-output name=is_semantic_tag::$IS_SEMANTIC_TAG"
+          echo "is_semantic_tag=$IS_SEMANTIC_TAG" >> $GITHUB_OUTPUT
+          echo "app_image_tag=$TAG" >> $GITHUB_OUTPUT
       -
         name: Push image to ECR
         uses: keboola/action-push-to-ecr@master
@@ -74,7 +74,7 @@ jobs:
     steps:
       -
         name: Check out the repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       -
         name: Pull image from ECR
         uses: keboola/action-pull-from-ecr@master
