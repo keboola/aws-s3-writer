@@ -1,7 +1,5 @@
 # AWS S3 Writer
 
-[![Build Status](https://travis-ci.com/keboola/aws-s3-writer.svg?branch=master)](https://travis-ci.com/keboola/aws-s3-writer)
-
 Upload all files in `/data/in/files` to the specified bucket and prefix. Existing files are overwritten.
 
 # Usage
