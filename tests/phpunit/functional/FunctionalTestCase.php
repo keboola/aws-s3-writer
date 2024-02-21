@@ -15,6 +15,7 @@ abstract class FunctionalTestCase extends \PHPUnit\Framework\TestCase
     protected const AWS_S3_SECRET_ACCESS_KEY_ENV = 'WRITER_AWS_SECRET_ACCESS_KEY';
     protected const FIXTURES_AWS_S3_SECRET_ACCESS_KEY_ENV = 'FIXTURES_AWS_SECRET_ACCESS_KEY';
     protected const AWS_REGION_ENV = 'AWS_REGION';
+    protected const ACCOUNT_ID_ENV = 'ACCOUNT_ID';
 
     protected function tearDown(): void
     {

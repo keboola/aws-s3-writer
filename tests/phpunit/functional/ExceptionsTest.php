@@ -22,6 +22,7 @@ class ExceptionsTest extends FunctionalTestCase
 
         $config = new Config([
             "parameters" => [
+                "loginType" => ConfigDefinition::LOGIN_TYPE_CREDENTIALS,
                 "accessKeyId" => getenv(self::AWS_S3_ACCESS_KEY_ID_ENV),
                 "#secretAccessKey" => getenv(self::AWS_S3_SECRET_ACCESS_KEY_ENV),
                 "bucket" => getenv(self::AWS_S3_BUCKET_ENV) . "_invalid",
@@ -42,6 +43,7 @@ class ExceptionsTest extends FunctionalTestCase
 
         $config = new Config([
             "parameters" => [
+                "loginType" => ConfigDefinition::LOGIN_TYPE_CREDENTIALS,
                 "accessKeyId" => getenv(self::AWS_S3_ACCESS_KEY_ID_ENV),
                 "#secretAccessKey" => getenv(self::AWS_S3_SECRET_ACCESS_KEY_ENV) . "_invalid",
                 "bucket" => getenv(self::AWS_S3_BUCKET_ENV),

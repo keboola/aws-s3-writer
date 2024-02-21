@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace Keboola\S3Writer;
 
+use Aws\Credentials\Credentials;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\MultipartUploader;
 use Aws\S3\S3Client;
 use Aws\S3\S3MultiRegionClient;
+use Aws\Sts\Exception\StsException;
+use Aws\Sts\StsClient;
 use Keboola\Component\UserException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Finder\Finder;
@@ -44,6 +47,78 @@ class S3Writer
         $this->logger = $logger;
     }
 
+    public function getExternalId(): string
+    {
+        return sprintf('%s-%s', getenv('KBC_STACKID'), getenv('KBC_PROJECTID'));
+    }
+
+    private function login(): S3Client
+    {
+        if ($this->config->getLoginType() === ConfigDefinition::LOGIN_TYPE_ROLE) {
+            return $this->loginViaRole();
+        }
+        return $this->loginViaCredentials();
+    }
+
+    private function loginViaCredentials(): S3Client
+    {
+        $awsCred = new Credentials($this->config->getAccessKeyId(), $this->config->getSecretAccessKey());
+        return new S3Client([
+            'region' => $this->getBucketRegion($awsCred),
+            'version' => '2006-03-01',
+            'credentials' => $awsCred,
+            'retries' => 10,
+        ]);
+    }
+
+    private function loginViaRole(): S3Client
+    {
+        $awsCred = new Credentials(
+            $this->config->getKeboolaUserAwsAccessKey(),
+            $this->config->getKeboolaUserAwsSecretKey()
+        );
+
+        try {
+            $stsClient = new StsClient([
+                'region' => 'us-east-1',
+                'version' => '2011-06-15',
+                'credentials' => $awsCred,
+            ]);
+
+            $roleArn = sprintf('arn:aws:iam::%s:role/%s', $this->config->getAccountId(), $this->config->getRoleName());
+            $result = $stsClient->assumeRole([
+                'RoleArn' => $roleArn,
+                'RoleSessionName' => 'KeboolaS3Extractor',
+                'ExternalId' => $this->getExternalId(),
+            ]);
+        } catch (StsException $exception) {
+            throw new UserException($exception->getMessage(), 0, $exception);
+        }
+
+        /** @var array $credentials */
+        $credentials = $result->offsetGet('Credentials');
+        $awsCred = new Credentials(
+            (string) $credentials['AccessKeyId'],
+            (string) $credentials['SecretAccessKey'],
+            (string) $credentials['SessionToken']
+        );
+
+        return new S3Client([
+            'region' => $this->getBucketRegion($awsCred),
+            'version' => '2006-03-01',
+            'credentials' => $awsCred,
+        ]);
+    }
+
+    private function getBucketRegion(Credentials $credentials): string
+    {
+        $client = new S3MultiRegionClient([
+            'version' => '2006-03-01',
+            'credentials' => $credentials,
+        ]);
+        return $client->getBucketLocation(['Bucket' => $this->config->getBucket()])->get('LocationConstraint');
+    }
+
     /**
      * Runs data extraction
      *
@@ -53,27 +128,7 @@ class S3Writer
     public function execute(string $sourcePath): void
     {
         try {
-            $client = new S3MultiRegionClient(
-                [
-                    'version' => '2006-03-01',
-                    'credentials' => [
-                        'key' => $this->config->getAccessKeyId(),
-                        'secret' => $this->config->getSecretAccessKey(),
-                    ],
-                ]
-            );
-            $region = $client->getBucketLocation(['Bucket' => $this->config->getBucket()])->get('LocationConstraint');
-
-            $options = [
-                'region' => $region,
-                'version' => '2006-03-01',
-                'credentials' => [
-                    'key' => $this->config->getAccessKeyId(),
-                    'secret' => $this->config->getSecretAccessKey(),
-                ],
-            ];
-
-            $client = new S3Client($options);
+            $client = $this->login();
 
             $relativePathnames = [];
             $finder = (new Finder())->in($sourcePath)->files();
