@@ -1,0 +1,71 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Cannot call method scalarNode\\(\\) on Symfony\\\\Component\\\\Config\\\\Definition\\\\Builder\\\\NodeParentInterface\\|null\\.$#"
+			count: 1
+			path: src/ConfigDefinition.php
+
+		-
+			message: "#^Method Keboola\\\\S3Writer\\\\S3Writer\\:\\:getBucketRegion\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: src/S3Writer.php
+
+		-
+			message: "#^PHPDoc tag @var for variable \\$credentials has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/S3Writer.php
+
+		-
+			message: "#^Used function GuzzleHttp\\\\Promise\\\\unwrap not found\\.$#"
+			count: 1
+			path: src/S3Writer.php
+
+		-
+			message: "#^Variable \\$file in PHPDoc tag @var does not match any variable in the foreach loop\\: \\$chunk, \\$fileRelativePathname$#"
+			count: 1
+			path: src/S3Writer.php
+
+		-
+			message: "#^Parameter \\#1 \\$bucket of method Aws\\\\S3\\\\S3Client\\:\\:doesObjectExist\\(\\) expects string, string\\|false given\\.$#"
+			count: 5
+			path: tests/phpunit/functional/UploadChunksTest.php
+
+		-
+			message: "#^Method Keboola\\\\S3Writer\\\\Tests\\\\Functional\\\\UploadToRootTest\\:\\:uploadArgumentsProvider\\(\\) should return array\\<array\\<string\\>\\> but returns array\\{array\\{true, literal\\-string&non\\-falsy\\-string\\}, array\\{true, literal\\-string&non\\-falsy\\-string\\}, array\\{false, literal\\-string&non\\-falsy\\-string\\}, array\\{false, literal\\-string&non\\-falsy\\-string\\}\\}\\.$#"
+			count: 1
+			path: tests/phpunit/functional/UploadToRootTest.php
+
+		-
+			message: "#^PHPDoc tag @return contains unresolvable type\\.$#"
+			count: 1
+			path: tests/phpunit/functional/UploadToRootTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$bucket of method Aws\\\\S3\\\\S3Client\\:\\:doesObjectExist\\(\\) expects string, string\\|false given\\.$#"
+			count: 2
+			path: tests/phpunit/functional/UploadToRootTest.php
+
+		-
+			message: "#^Method Keboola\\\\S3Writer\\\\Tests\\\\Functional\\\\UploadToSubfolderTest\\:\\:uploadArgumentsProvider\\(\\) should return array\\<array\\<string\\>\\> but returns array\\{array\\{true, literal\\-string&non\\-falsy\\-string\\}, array\\{true, literal\\-string&non\\-falsy\\-string\\}, array\\{false, literal\\-string&non\\-falsy\\-string\\}, array\\{false, literal\\-string&non\\-falsy\\-string\\}\\}\\.$#"
+			count: 1
+			path: tests/phpunit/functional/UploadToSubfolderTest.php
+
+		-
+			message: "#^PHPDoc tag @return contains unresolvable type\\.$#"
+			count: 1
+			path: tests/phpunit/functional/UploadToSubfolderTest.php
+
+		-
+			message: "#^Parameter \\#1 \\$bucket of method Aws\\\\S3\\\\S3Client\\:\\:doesObjectExist\\(\\) expects string, string\\|false given\\.$#"
+			count: 2
+			path: tests/phpunit/functional/UploadToSubfolderTest.php
+
+		-
+			message: "#^Cannot access offset 'Key' on mixed\\.$#"
+			count: 1
+			path: tests/phpunit/purgeS3.php
+
+		-
+			message: "#^Parameter \\#2 \\$array of function array_map expects array, mixed given\\.$#"
+			count: 1
+			path: tests/phpunit/purgeS3.php

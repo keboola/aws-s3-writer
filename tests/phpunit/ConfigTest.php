@@ -14,7 +14,6 @@ class ConfigTest extends TestCase
     {
         $configArray = [
             'parameters' => [
-                'loginType' => ConfigDefinition::LOGIN_TYPE_CREDENTIALS,
                 'accessKeyId' => 'key',
                 '#secretAccessKey' => 'secret',
                 'bucket' => 'bucket',
@@ -32,7 +31,6 @@ class ConfigTest extends TestCase
     {
         $configArray = [
             'parameters' => [
-                'loginType' => ConfigDefinition::LOGIN_TYPE_CREDENTIALS,
                 'accessKeyId' => 'key',
                 '#secretAccessKey' => 'secret',
                 'bucket' => 'bucket',

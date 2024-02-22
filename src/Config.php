@@ -9,41 +9,44 @@ use Keboola\Component\Config\BaseConfig;
 
 class Config extends BaseConfig
 {
-    public function getAccessKeyId() : string
+    public function getAccessKeyId(): string
     {
-        return $this->getValue(['parameters', 'accessKeyId']);
+        return $this->getStringValue(['parameters', 'accessKeyId']);
     }
 
-    public function getSecretAccessKey() : string
+    public function getSecretAccessKey(): string
     {
-        return $this->getValue(['parameters', '#secretAccessKey']);
+        return $this->getStringValue(['parameters', '#secretAccessKey']);
     }
 
-    public function getBucket() : string
+    public function getBucket(): string
     {
-        return $this->getValue(['parameters', 'bucket']);
+        return $this->getStringValue(['parameters', 'bucket']);
     }
 
-    public function getPrefix() : string
+    public function getPrefix(): string
     {
-        return $this->getValue(['parameters', 'prefix'], '');
+        return $this->getStringValue(['parameters', 'prefix'], '');
     }
 
     public function getLoginType(): string
     {
-        return $this->getValue(['parameters', 'loginType']);
+        return $this->getStringValue(['parameters', 'loginType']);
     }
 
     public function getAccountId(): string
     {
-        return $this->getValue(['parameters', 'accountId']);
+        return $this->getStringValue(['parameters', 'accountId']);
     }
 
     public function getRoleName(): string
     {
-        return $this->getValue(['parameters', 'roleName']);
+        return $this->getStringValue(['parameters', 'roleName']);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function getKeboolaUserAwsAccessKey(): string
     {
         $accessKey = getenv('KEBOOLA_USER_AWS_ACCESS_KEY');

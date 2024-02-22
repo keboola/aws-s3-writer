@@ -5,38 +5,36 @@ declare(strict_types=1);
 namespace Keboola\S3Writer;
 
 use Aws\Credentials\Credentials;
+use Aws\Exception\MultipartUploadException;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\MultipartUploader;
 use Aws\S3\S3Client;
 use Aws\S3\S3MultiRegionClient;
 use Aws\Sts\Exception\StsException;
 use Aws\Sts\StsClient;
+use GuzzleHttp\Promise\Utils;
 use Keboola\Component\UserException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use function GuzzleHttp\Promise\unwrap;
 
 class S3Writer
 {
     /**
      *
      */
-    private const CHUNK_SIZE = 50;
+    private const int CHUNK_SIZE = 50;
     /**
      *
      */
-    private const MAX_RETRIES_PER_CHUNK = 50;
+    private const int MAX_RETRIES_PER_CHUNK = 50;
 
-    private const MAX_LOG_EVENTS = 100;
+    private const int MAX_LOG_EVENTS = 100;
 
-    /**
-     * @var Config
-     */
-    private $config;
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    private Config $config;
+
+    private LoggerInterface $logger;
 
     /**
      * Application constructor.
@@ -52,6 +50,9 @@ class S3Writer
         return sprintf('%s-%s', getenv('KBC_STACKID'), getenv('KBC_PROJECTID'));
     }
 
+    /**
+     * @throws \Keboola\Component\UserException
+     */
     private function login(): S3Client
     {
         if ($this->config->getLoginType() === ConfigDefinition::LOGIN_TYPE_ROLE) {
@@ -71,11 +72,15 @@ class S3Writer
         ]);
     }
 
+    /**
+     * @throws \Keboola\Component\UserException
+     * @throws \Exception
+     */
     private function loginViaRole(): S3Client
     {
         $awsCred = new Credentials(
             $this->config->getKeboolaUserAwsAccessKey(),
-            $this->config->getKeboolaUserAwsSecretKey()
+            $this->config->getKeboolaUserAwsSecretKey(),
         );
 
         try {
@@ -100,7 +105,7 @@ class S3Writer
         $awsCred = new Credentials(
             (string) $credentials['AccessKeyId'],
             (string) $credentials['SecretAccessKey'],
-            (string) $credentials['SessionToken']
+            (string) $credentials['SessionToken'],
         );
 
         return new S3Client([
@@ -152,7 +157,7 @@ class S3Writer
                     if (count($relativePathnames) < self::MAX_LOG_EVENTS) {
                         $this->logger->info("Starting upload of file {$fileRelativePathname} to {$s3Key}");
                     } elseif (is_int($counterUploadedFiles/$onePercentOfFiles)) {
-                        $this->logger->info(sprintf("Uploaded %d%% files.", $counterUploadedFiles/$onePercentOfFiles));
+                        $this->logger->info(sprintf('Uploaded %d%% files.', $counterUploadedFiles/$onePercentOfFiles));
                     }
                     /*
                      * Cannot upload empty files using multipart: https://github.com/aws/aws-sdk-php/issues/1429
@@ -160,13 +165,13 @@ class S3Writer
                      */
                     if (filesize($sourcePath . '/' . $fileRelativePathname) === 0) {
                         $fh = fopen($sourcePath . '/' . $fileRelativePathname, 'r');
-                        $putParams = array(
+                        $putParams = [
                             'Bucket' => $this->config->getBucket(),
                             'Key' => $s3Key,
                             'Body' => $fh,
                             'ContentDisposition' =>
                                 sprintf('attachment; filename=%s;', basename($fileRelativePathname)),
-                        );
+                        ];
                         $client->putObject($putParams);
                         continue;
                     }
@@ -174,7 +179,7 @@ class S3Writer
                         $client,
                         $sourcePath . '/' . $fileRelativePathname,
                         $this->config->getBucket(),
-                        $this->getS3Key($fileRelativePathname)
+                        $this->getS3Key($fileRelativePathname),
                     );
                     $promises[$fileRelativePathname] = $uploader->promise();
                 }
@@ -188,9 +193,9 @@ class S3Writer
                 $retries = 0;
                 do {
                     try {
-                        \GuzzleHttp\Promise\unwrap($promises);
+                        Utils::unwrap($promises);
                         $finished = true;
-                    } catch (\Aws\Exception\MultipartUploadException $e) {
+                    } catch (MultipartUploadException $e) {
                         $retries++;
                         if ($retries >= self::MAX_RETRIES_PER_CHUNK) {
                             throw new UserException('Exceeded maximum number of retries per chunk upload');
@@ -201,13 +206,13 @@ class S3Writer
                          * @var \GuzzleHttp\Promise\Promise $promise
                          */
                         foreach ($unwrappedPromises as $fileRelativePathname => $promise) {
-                            if ($promise->getState() == 'rejected') {
+                            if ($promise->getState() === 'rejected') {
                                 $this->logger->info("Retrying upload of file {$fileRelativePathname}");
                                 $uploader = $this->multipartUploaderFactory(
                                     $client,
                                     $sourcePath . '/' . $fileRelativePathname,
                                     $this->config->getBucket(),
-                                    $this->getS3Key($fileRelativePathname)
+                                    $this->getS3Key($fileRelativePathname),
                                 );
                                 $promises[$fileRelativePathname] = $uploader->promise();
                             }
@@ -225,8 +230,8 @@ class S3Writer
         string $filePath,
         string $bucket,
         string $key,
-        ?string $friendlyName = null
-    ) : MultipartUploader {
+        ?string $friendlyName = null,
+    ): MultipartUploader {
         $uploaderOptions = [
             'Bucket' => $bucket,
             'Key' => $key,
@@ -236,7 +241,7 @@ class S3Writer
             $beforeInitiateCommands['ContentDisposition'] = sprintf('attachment; filename=%s;', $friendlyName);
         }
         if (count($beforeInitiateCommands)) {
-            $uploaderOptions['before_initiate'] = function ($command) use ($beforeInitiateCommands) : void {
+            $uploaderOptions['before_initiate'] = function ($command) use ($beforeInitiateCommands): void {
                 foreach ($beforeInitiateCommands as $key => $value) {
                     $command[$key] = $value;
                 }
@@ -249,7 +254,7 @@ class S3Writer
      *
      * Concats prefix (without initial forwardslash) and relative path name to the file
      */
-    private function getS3Key(string $relativePathname) : string
+    private function getS3Key(string $relativePathname): string
     {
         return ltrim($this->config->getPrefix(), '/') . $relativePathname;
     }

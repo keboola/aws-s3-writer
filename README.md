@@ -6,10 +6,10 @@ Upload all files in `/data/in/files` to the specified bucket and prefix. Existin
 
 ## Configuration options
 
-- `loginType` (required) -- Login type (credentials/role)
-- `accessKeyId` (required if your choose loginType "credentials") -- AWS Access Key ID
-- `#secretAccessKey` (required if your choose loginType "credentials") -- AWS Secret Access Key
-- `accountId` (required if your choose loginType "role") - AWS Account Id
+- `loginType` (required, default `credentials`) -- Login type (`credentials`/`role`)
+- `accessKeyId` (required if your choose `loginType` `credentials`) -- AWS Access Key ID
+- `#secretAccessKey` (required if your choose `loginType` `credentials`) -- AWS Secret Access Key
+- `accountId` (required if your choose loginType `role`) - AWS Account Id
 - `bucket` (required) -- AWS S3 bucket name, it's region will be autodetected
 - `prefix` (optional) -- Path prefix
 
@@ -22,7 +22,6 @@ Upload all files in `/data/in/files` to the specified bucket and prefix. Existin
 ```json
 {
     "parameters": {
-        "loginType": "credentials",
         "accessKeyId": "AKIA****",
         "#secretAccessKey": "****",
         "bucket": "myBucket"
