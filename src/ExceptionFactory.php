@@ -10,31 +10,24 @@ use Keboola\Component\UserException;
 
 class ExceptionFactory
 {
-    /**
-     * @return UserException|S3Exception
-     */
-    public static function fromS3Exception(S3Exception $e)
+    public static function fromS3Exception(S3Exception $e): S3Exception|UserException
     {
         if ($e->getStatusCode() === 403) {
-            return new UserException("Invalid credentials or permissions.", $e->getCode(), $e);
+            return new UserException('Invalid credentials or permissions.', $e->getCode(), $e);
         }
         if ($e->getStatusCode() === 400 || $e->getStatusCode() === 401 || $e->getStatusCode() === 404) {
             if ($e->getPrevious() instanceof ClientException) {
                 /** @var ClientException $previous */
                 $previous = $e->getPrevious();
-                if ($previous->getResponse()) {
-                    $previous = $e->getPrevious();
-                    return new UserException(
-                        $e->getStatusCode()
-                        . " "
+                return new UserException(
+                    $e->getStatusCode()
+                        . ' '
                         . $previous->getResponse()->getReasonPhrase()
-                        . " ("
+                        . ' ('
                         . $e->getAwsErrorCode()
                         . ")\n"
-                        . $previous->getResponse()->getBody()->__toString()
-                    );
-                }
-                return new UserException($previous->getMessage());
+                        . $previous->getResponse()->getBody()->__toString(),
+                );
             }
             return new UserException($e->getMessage());
         }

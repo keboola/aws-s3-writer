@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use Aws\S3\S3Client;
+
 /*
  * Purges S3 bucket
  */
@@ -14,7 +16,7 @@ $basedir = dirname(__DIR__);
 
 require_once $basedir . '/../vendor/autoload.php';
 
-$client =  new \Aws\S3\S3Client([
+$client =  new S3Client([
     'region' => getenv('AWS_REGION'),
     'version' => '2006-03-01',
     'credentials' => [

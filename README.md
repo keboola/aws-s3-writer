@@ -1,21 +1,23 @@
 # AWS S3 Writer
 
-[![Build Status](https://travis-ci.com/keboola/aws-s3-writer.svg?branch=master)](https://travis-ci.com/keboola/aws-s3-writer)
-
 Upload all files in `/data/in/files` to the specified bucket and prefix. Existing files are overwritten.
 
 # Usage
 
 ## Configuration options
 
-- `accessKeyId` (required) -- AWS Access Key ID
-- `#secretAccessKey` (required) -- AWS Secret Access Key
+- `loginType` (required, default `credentials`) -- Login type (`credentials`/`role`)
+- `accessKeyId` (required if your choose `loginType` `credentials`) -- AWS Access Key ID
+- `#secretAccessKey` (required if your choose `loginType` `credentials`) -- AWS Secret Access Key
+- `accountId` (required if your choose loginType `role`) - AWS Account Id
 - `bucket` (required) -- AWS S3 bucket name, it's region will be autodetected
 - `prefix` (optional) -- Path prefix
 
-### Sample configurations
+## Sample configurations
 
-#### Upload to bucket root
+### Upload to bucket root
+
+#### Using credentials
 
 ```json
 {
@@ -27,7 +29,20 @@ Upload all files in `/data/in/files` to the specified bucket and prefix. Existin
 }
 ```
 
-#### Upload with prefix bucket root
+#### Using role
+
+```json
+{
+    "parameters": {
+        "loginType": "role",
+        "accountId": "123456789",
+        "bucket": "myBucket"
+    }
+}
+```
+
+
+### Upload with prefix bucket root
 
 ```json
 {
@@ -54,6 +69,12 @@ WRITER_AWS_ACCESS_KEY_ID=
 WRITER_AWS_SECRET_ACCESS_KEY=
 FIXTURES_AWS_ACCESS_KEY_ID=
 FIXTURES_AWS_SECRET_ACCESS_KEY=
+KEBOOLA_USER_AWS_ACCESS_KEY=
+KEBOOLA_USER_AWS_SECRET_KEY=
+ACCOUNT_ID=
+ROLE_NAME=
+KBC_PROJECTID=
+KBC_STACKID=
 ```
 
 Clone this repository and init the workspace with following command:
