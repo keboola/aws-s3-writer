@@ -16,7 +16,7 @@ class Component extends BaseComponent
     /**
      * @throws \Keboola\Component\UserException
      */
-    public function run(): void
+    protected function run(): void
     {
         /** @var Config $config */
         $config = $this->getConfig();
