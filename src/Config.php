@@ -26,7 +26,9 @@ class Config extends BaseConfig
 
     public function getPrefix(): string
     {
-        return $this->getStringValue(['parameters', 'prefix'], '');
+        return PrefixProcessor::process(
+            $this->getStringValue(['parameters', 'prefix'], ''),
+        );
     }
 
     public function getLoginType(): string
